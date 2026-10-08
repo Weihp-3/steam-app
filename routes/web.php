@@ -7,8 +7,13 @@ Route::get('/', function () {
     return view('landing');
 });
 
-Route::get('/dashboard', function () {
-    return view('dashboard');
+Route::get('/dashboard', function (\Illuminate\Http\Request $request) {
+    if ($request->user()->isAdmin()) {
+        return redirect()->route('admin.dashboard');
+    } elseif ($request->user()->isPegawai()) {
+        return redirect()->route('pegawai.dashboard');
+    }
+    return redirect()->route('user.dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
